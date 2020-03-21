@@ -5,9 +5,19 @@
 
   <style>
 
+  body {
+   background : url("https://lh3.googleusercontent.com/z-_PL0WNLVMsFvKYYSr_JFuitQ-4mDvcbYlxyLF30gOmRrfXIBdxte_PL9CrqT4Tm8PJVWWEnsoCd4yBdLd8ACh4k3Sp3eF3fv8hxUbWxOFD6LfWvbiC4YTqvyH_IvPwZSqbWyGr=w2400") ;
+  
+   background-size : 100% ;
+
+   }
+
   canvas {
-    border:1px solid #d3d3d3;
-    background-color: #f1f1f1;
+    margin-top : 5px ;
+    float:left ;
+    border:3px solid black;
+    background: url("https://i.pinimg.com/originals/b2/b0/84/b2b084ad6061dfe2122302266ea8af58.jpg");
+    background-size : contain ;
 }
 
   </style>
@@ -15,15 +25,22 @@
   </head>
 
 
-<body onload = "startGame()">
+<body onload = "startGame()"  >
+
+
+
+  <h1 style=" margin-top : 70px ; margin-left : 40% " id = "myh" > FLAPPY BIRD</h1>
+
+
+
   <script>
   var myBox;
   var myObst = [];
   var myScore;
 
 function startGame() {
-
-  myBox = new component(30, 30, 10, 0, "blue");
+  
+  myBox = new component(40, 40, 10, 0, "https://lh3.googleusercontent.com/DS6S9Wv0ToRzPR-1t1rESqdZeF3jzTZOeDybb49nZGWQbcvhPyBKBbROsIoZ5CqdOJdTOvb0qwZOKhil5iDPCePuTxRK4kkkWERLZXilgJIvZFa0SLlHKbLOE9geG8uBoG5eNU8Y=w2400","image");
   myBox.gravity = 0.05;
 
   myScore = new component(40, 50, 530, 30,"black","text");
@@ -38,8 +55,8 @@ var myGameArea = {
 
   start : function() {
 
-    this.canvas.width = 600;
-    this.canvas.height = 300;
+    this.canvas.width = 1800;
+    this.canvas.height = 400;
 
     this.context = this.canvas.getContext("2d");
 
@@ -76,6 +93,17 @@ function component(height, width, x, y, color, type) {
   this.SpeedY=0;
   this.gravity=0;
   this.gravitySpeed=0;
+  this.accx = 0 ;
+
+  if(this.type == "image"){
+
+  this.image=new Image() ;
+
+  this.image.src=color ;
+
+
+  }
+
 
   this.update = function() {
 
@@ -90,11 +118,19 @@ function component(height, width, x, y, color, type) {
     ctx.fillText(this.text, this.x, this.y);
 
 
-  } else {
+  } else if(this.type== "image" ) {
 
-    ctx.fillStyle = color;
 
-    ctx.fillRect(this.x, this.y, this.width, this.height);
+    ctx.drawImage(this.image,this.x,this.y,this.width,this.height) ;
+
+
+    }
+
+    else {
+
+   ctx.fillStyle = color ;
+
+   ctx.fillRect(this.x,this.y,this.width,this.height) ;
 
 
     }
@@ -109,8 +145,7 @@ function component(height, width, x, y, color, type) {
     this.gravitySpeed += this.gravity;
 
 
-
-    this.x += this.SpeedX;
+    this.x += this.SpeedX + this.accx;
 
     this.y += this.SpeedY + this.gravitySpeed;
 
@@ -137,13 +172,13 @@ function component(height, width, x, y, color, type) {
   this.collision = function(obj){
 
 
-  var boxtop = this.y ;
+  var boxtop = this.y + 4 ;
 
-  var boxbottom = this.y + this.height ;
+  var boxbottom = this.y + this.height - 4  ;
 
-  var boxleft = this.x ;
+  var boxleft = this.x + 3 ;
 
-  var boxright = this.x + this.width ;
+  var boxright = this.x + this.width -6;
 
   var objtop = obj.y ;
 
@@ -185,21 +220,21 @@ myGameArea.frameno += 1;
 
 var mingap, minh, maxh, maxgap;
 
-if (myGameArea.frameno ==1 || myGameArea.frameno%150 == 0 ) {
+if (myGameArea.frameno ==15 || myGameArea.frameno%200 == 0 ) {
 
 x = myGameArea.canvas.width;
         minHeight = 20;
         maxHeight = 200;
         height = Math.floor(Math.random()*(maxHeight-minHeight+1)+minHeight);
-        minGap = 50;
+        minGap = 70;
         maxGap = 200;
         gap = Math.floor(Math.random()*(maxGap-minGap+1)+minGap);
 
 
 
-  myObst.push(new component(height, 20, x, 0, "green"));
+  myObst.push(new component(height, 40, x, 0, "https://gaultmitchell.co.nz/wp-content/plugins/velocity-game/data/img/pipe.png","image"));
 
-  myObst.push(new component(x - height - gap, 20, x, height + gap, "green") );
+  myObst.push(new component(x - height - gap, 40, x, height + gap, "https://gaultmitchell.co.nz/wp-content/plugins/velocity-game/data/img/pipe.png","image") );
 
 }
 
@@ -217,32 +252,48 @@ myScore.text = "SCORE : " + (myGameArea.frameno);
 myScore.update();
 
 myBox.newpos();
-
 myBox.update();
 
 
 }
 
-function everyinterval(n) {
-    if ((myGameArea.frameNo / n) % 1 == 0) {return true;}
-    return false;
-}
 
 
 function mup(n){
 
+
 myBox.gravity=n ;
+if(n>0){
+myBox.image.src = "https://lh3.googleusercontent.com/DS6S9Wv0ToRzPR-1t1rESqdZeF3jzTZOeDybb49nZGWQbcvhPyBKBbROsIoZ5CqdOJdTOvb0qwZOKhil5iDPCePuTxRK4kkkWERLZXilgJIvZFa0SLlHKbLOE9geG8uBoG5eNU8Y=w2400" ;
+}
+else {myBox.image.src = "https://lh3.googleusercontent.com/jad-kAIW2EJxkfH-nxAUeqadocFrKQOZ1-2wVhENg8divn81wsur2TMFDolx-EDCPB-w2bEhQuRWXNYuVDMxy_TNfOysrpU8sSxFIlgg3Cs73w51ShjEjyOemtkg7cNOrSnYqhw9=w2400" ;}
+}
+
+function mup2(n){
+
+
+myBox.accx += n ;
+
+
+
 
 }
 
 
+
+
 </script>
 
-<br>
 
-<button onmousedown = "mup(-0.055)" onmouseup = "mup(0.05)" >FLY</button>
+
+<button style="margin-left : 190px ; font-size : 20px ;  " onmousedown = "mup(-0.055)" onmouseup = "mup(0.05)"  >FLY</button>
+
+
+<button style="margin-left : 5px ; font-size : 20px " onclick = "mup2(0.02)" >BOOST</button>
+
+<button style=" margin-left :5px; font-size : 20px " onclick = "mup2(-0.01)"  >SLOW</button>
+
 
 </body>
 
 </html>
-
